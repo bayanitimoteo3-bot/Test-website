@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Welcome to Bulong</title>
+<style>
+:root{
+  --bg:#fbf6ee;--card:rgba(255,255,255,.82);--ink:#2b1216;--mute:#7d6a6c;--line:rgba(110,30,30,.12);
+  --accent:#800000;--accent2:#d99a00;--onaccent:#fff;--btn:linear-gradient(120deg,#800000,#a31621);--tile:#fbecc8;--shadow:0 10px 30px rgba(90,20,25,.10);
+  --glow1:#ffe3a3;--glow2:#f5c9c9;--bar:rgba(251,246,238,.9);
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#190c0f;--card:rgba(48,24,28,.76);--ink:#f7ecec;--mute:#b79ea1;--line:rgba(255,255,255,.10);
+  --accent:#f2b705;--accent2:#ffd75e;--onaccent:#3a0a10;--btn:linear-gradient(120deg,#f2b705,#ffd75e);--tile:#4a2a26;--shadow:0 10px 30px rgba(0,0,0,.4);
+  --glow1:#4f2a14;--glow2:#4a1620;--bar:rgba(25,12,15,.9)}}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.6;
+  background:radial-gradient(900px 500px at 10% -10%,var(--glow1),transparent 60%),radial-gradient(800px 500px at 100% 0%,var(--glow2),transparent 55%),var(--bg);background-attachment:fixed}
+.wrap{max-width:940px;margin:auto;padding:36px 20px 0}
+.hero{text-align:center;padding:24px 0 30px}
+.audience{display:inline-block;font-size:15px;font-weight:700;letter-spacing:.2px;color:var(--accent);background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:16px;padding:12px 26px;box-shadow:var(--shadow);margin-bottom:20px}
+h1{margin:0;font-size:clamp(46px,9vw,76px);line-height:1;letter-spacing:-1.5px;font-weight:800;
+  color:var(--accent);background:linear-gradient(120deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.tag{font-size:clamp(18px,3vw,24px);font-weight:600;margin:14px 0 6px}
+.sub{color:var(--mute);margin:0 auto;max-width:480px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.grid{grid-template-columns:1fr}}
+.box{background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s}
+.box{border-top:3px solid var(--accent2)}
+.box:hover{transform:translateY(-3px)}
+.ico svg{width:24px;height:24px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ico{width:46px;height:46px;border-radius:14px;background:var(--tile);display:grid;place-items:center;font-size:23px;margin-bottom:12px}
+h2{font-size:19px;margin:0 0 8px;letter-spacing:-.2px}
+.box p{margin:0 0 9px;font-size:15px;color:var(--ink)}
+.box p:last-child{margin-bottom:0}
+.wide{grid-column:1/-1}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.sch{background:var(--tile);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:14px;font-weight:500}
+.sch.every{background:var(--accent);color:#fff;border-color:transparent;font-weight:700}
+.help{background:linear-gradient(160deg,var(--tile),var(--card))}
+.nums{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.num{background:var(--accent);color:var(--onaccent);border-radius:12px;padding:8px 14px;font-weight:700;font-size:15px}
+.num small{display:block;font-weight:500;font-size:11.5px;opacity:.9}
+.bar{position:sticky;bottom:0;margin:26px -20px 0;padding:16px 20px calc(16px + env(safe-area-inset-bottom,0px));background:var(--bar);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line)}
+.bar-in{max-width:520px;margin:auto}
+.agree{display:flex;gap:10px;align-items:center;margin:0 0 10px;font-size:15px;cursor:pointer}
+.agree input{accent-color:var(--accent);width:20px;height:20px}
+.go{display:block;width:100%;text-align:center;text-decoration:none;padding:15px;border:0;border-radius:14px;background:var(--btn);color:var(--onaccent);font:700 16px Inter,system-ui,sans-serif;cursor:pointer;box-shadow:0 8px 20px rgba(128,0,0,.28);transition:transform .15s}
+.go:hover:not(:disabled){transform:translateY(-2px)}
+.go:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.hid{display:none}
+@media (prefers-reduced-motion:no-preference){
+  .hero,.box{animation:up .6s both}
+  .box:nth-child(2){animation-delay:.08s}.box:nth-child(3){animation-delay:.16s}.box:nth-child(4){animation-delay:.24s}.box:nth-child(5){animation-delay:.32s}
+  @keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="audience">For university students</div>
+    <h1>Bulong</h1>
+    <p class="tag">Say what you can’t say out loud.</p>
+    <p class="sub">No account, no name, just your message.</p>
+  </header>
+
+  <main class="grid">
+    <section class="box">
+      <div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></div>
+      <h2>How it works</h2>
+      <p>Pick your school, write your message, and send it anonymously.</p>
+      <p>Read what students at your school wrote, or the All schools board.</p>
+      <p>Send a hug to show someone you read it and understood.</p>
+    </section>
+
+    <section class="box">
+      <div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2L12 3zM12 10v5M12 18h.01"/></svg></div>
+      <h2>Content warnings</h2>
+      <p>Heavy messages are blurred when the writer adds a warning. Tap it to choose whether to read.</p>
+      <p>Writing something upsetting? Tick a warning before you send.</p>
+      <p>The 18+ button is a promise, not an ID check. If you’re under 18, please skip those messages.</p>
+    </section>
+
+    <section class="box">
+      <div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h8l4 4v14H7zM15 3v4h4M10 12h6M10 16h6"/></svg></div>
+      <h2>Rules</h2>
+      <p>Don’t name or describe real people, like classmates, teachers, or staff.</p>
+      <p>No phone numbers, links, addresses, or social media handles.</p>
+      <p>No bullying, hate, threats, or sexual content. Anything involving minors is never allowed.</p>
+      <p>Keep details vague. Campuses are small, so your section or schedule could give you away.</p>
+      <p>See something wrong? Press Report.</p>
+    </section>
+
+    <section class="box help">
+      <div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-8-5-8-11a4.5 4.5 0 0 1 8-2.5A4.5 4.5 0 0 1 20 9c0 6-8 11-8 11z"/></svg></div>
+      <h2>If you need help</h2>
+      <p>Bulong isn’t counseling, and no one here can reply to you privately.</p>
+      <div class="nums">
+        <div class="num"><small>NCMH Crisis Hotline</small>1553</div>
+        <div class="num"><small>NCMH mobile</small>0917-899-8727</div>
+        <div class="num"><small>Immediate danger</small>911</div>
+      </div>
+      <p>Your school’s guidance office can help too.</p>
+    </section>
+    <section class="box wide">
+      <div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/></svg></div>
+      <h2>University you can send a message to</h2>
+      <div class="chips">
+        <span class="sch">University of Santo Tomas</span>
+        <span class="sch">Far Eastern University</span>
+        <span class="sch">National University</span>
+        <span class="sch">Centro Escolar University</span>
+        <span class="sch">Adamson University</span>
+        <span class="sch">San Beda University</span>
+        <span class="sch">University of the East</span>
+        <span class="sch">Mapúa University</span>
+        <span class="sch">Colegio de San Juan de Letran</span>
+        <span class="sch">Arellano University</span>
+        <span class="sch">Lyceum of the Philippines University</span>
+        <span class="sch">Technological University of the Philippines</span>
+        <span class="sch">Polytechnic University of the Philippines</span>
+        <span class="sch every">Everyone (if you’re not from these schools)</span>
+      </div>
+    </section>
+  </main>
+
+  <div class="bar">
+    <div class="bar-in">
+      <div id="firstTime">
+        <label class="agree"><input type="checkbox" id="chk"> I’ve read this and I’ll follow the rules.</label>
+        <button class="go" id="enter" disabled>Enter Bulong</button>
+      </div>
+      <a class="go hid" id="back" href="read.html">Enter Bulong</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const KEY="bulong_intro_v1";
+let agreed=false;
+try{agreed=localStorage.getItem(KEY)==="1"}catch(e){}
+const $=id=>document.getElementById(id);
+if(agreed){
+  $("firstTime").classList.add("hid");
+  $("back").classList.remove("hid");
+}else{
+  $("chk").onchange=()=>{$("enter").disabled=!$("chk").checked};
+  $("enter").onclick=()=>{
+    try{localStorage.setItem(KEY,"1")}catch(e){}
+    location.href="read.html";
+  };
+}
+</script>
+</body>
+</html>

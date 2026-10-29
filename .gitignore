@@ -1,0 +1,4 @@
+node_modules/
+.env
+public/oracleJdk-27/
+bulong-app/public/oracleJdk-27/

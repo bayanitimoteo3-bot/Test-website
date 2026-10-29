@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>try{if(localStorage.getItem("bulong_intro_v1")!=="1")location.replace("index.html")}catch(e){}</script>
+<title>Write a message – Bulong</title>
+<style>
+:root{--bg:#fbf6ee;--card:#fff;--ink:#2b1216;--mute:#7d6a6c;--line:#ead9cc;--accent:#800000;--accent2:#d99a00;--onaccent:#fff;--btn:linear-gradient(120deg,#800000,#a31621);--soft:#f8eddc;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#190c0f;--card:#291418;--ink:#f7ecec;--mute:#b79ea1;--line:#4a2a2f;--accent:#f2b705;--accent2:#ffd75e;--onaccent:#3a0a10;--btn:linear-gradient(120deg,#f2b705,#ffd75e);--soft:#341a1f}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Times New Roman",serif;line-height:1.5}
+header{padding:20px 20px 4px;max-width:1000px;margin:auto}
+h1{margin:0;font-size:30px;letter-spacing:.5px}
+header p{margin:2px 0 0;color:var(--mute);font-family:system-ui,sans-serif;font-size:14px}
+main{max-width:1000px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;padding:16px 20px 40px;font-family:system-ui,sans-serif}
+@media(max-width:760px){main{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+svg{width:100%;height:auto;max-height:560px;display:block}
+.reg{cursor:pointer}
+.reg circle{fill:var(--dot);transition:.15s}
+.reg:hover circle{fill:var(--accent)}
+.reg.sel circle{fill:var(--dotsel);stroke:var(--ink);stroke-width:1.5}
+.reg text{font-size:11px;fill:var(--ink);pointer-events:none}
+.reg .n{fill:#fff;font-weight:700;font-size:11px;text-anchor:middle}
+.lbl{text-anchor:start}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tabs button,.chip{border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:999px;padding:7px 14px;font:inherit;font-size:14px;cursor:pointer}
+.tabs button.on{background:var(--accent);color:var(--onaccent);border-color:var(--accent)}
+.chip{padding:5px 11px;font-size:13px}
+textarea{width:100%;min-height:130px;resize:vertical;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:12px;font:16px Georgia,serif}
+select{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;margin:8px 0}
+.go{width:100%;padding:12px;border:0;border-radius:12px;background:var(--btn);color:var(--onaccent);font:600 15px system-ui,sans-serif;cursor:pointer}
+.note{font-size:12.5px;color:var(--mute);margin:6px 0}
+.warn{background:var(--soft);border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px;font-size:13.5px;margin:8px 0}
+.msg{border-bottom:1px solid var(--line);padding:12px 2px}
+.msg:last-child{border:0}
+.msg p{margin:0 0 6px;font:16px Georgia,serif;white-space:pre-wrap;word-wrap:break-word}
+.meta{display:flex;gap:10px;align-items:center;font-size:12.5px;color:var(--mute)}
+.meta button{background:none;border:0;color:var(--mute);cursor:pointer;font:inherit;padding:2px 4px}
+.meta button:hover{color:var(--accent)}
+.meta .sp{flex:1}
+.hid{display:none}
+.ropts{display:flex;flex-direction:column;gap:6px;max-height:50vh;overflow-y:auto;margin-top:8px}
+.ro{display:flex;gap:8px;align-items:center;border:1px solid var(--line);background:var(--soft);border-radius:10px;padding:9px 11px;font-size:14px;cursor:pointer}
+.ro:has(input:checked){border-color:var(--accent);outline:1px solid var(--accent)}
+.ro input{accent-color:var(--accent)}
+#rNote{min-height:70px;margin-top:8px;font:14px system-ui,sans-serif}
+.aboutbtn{margin-top:10px;display:inline-block;text-decoration:none}
+.go:disabled{opacity:.45;cursor:not-allowed}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font:14px system-ui,sans-serif;max-width:90%;z-index:60}
+.toast.hid{display:none}
+.blurwrap{position:relative;cursor:pointer;border-radius:12px;overflow:hidden;margin-bottom:6px}
+.warnbar{position:relative;z-index:2;display:flex;gap:8px;align-items:center;background:var(--accent);color:var(--onaccent);padding:8px 12px;font-size:13.5px;font-weight:600;border-radius:12px 12px 0 0}
+.blurwrap .blurred{filter:blur(7px);user-select:none;margin:0;padding:10px 12px;background:var(--soft);border-radius:0 0 12px 12px;pointer-events:none}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modal.hid{display:none}
+.mbox{background:var(--card);color:var(--ink);border-radius:16px;padding:20px;max-width:380px;width:100%}
+.mbtn{display:flex;gap:8px;align-items:center;margin-top:12px}
+.mbtn .go{width:auto;padding:10px 16px}
+.search{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;margin-bottom:10px}
+.schools{display:flex;flex-direction:column;gap:6px;max-height:470px;overflow-y:auto;margin-bottom:10px}
+.sc{display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:12px;padding:10px 12px;font:inherit;font-size:14px;cursor:pointer}
+.sc small{opacity:.7;font-size:12px}
+.sc.sel{background:var(--accent);color:var(--onaccent);border-color:var(--accent)}
+.wchips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+.wc{border:1px solid var(--line);background:var(--soft);border-radius:999px;padding:5px 11px;font-size:13px;cursor:pointer;user-select:none}
+.wc:has(input:checked){background:var(--accent);color:var(--onaccent);border-color:var(--accent)}
+.wc input{display:none}
+.tag{display:inline-block;background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:12px;margin:2px 4px 2px 0}
+.tags{margin-bottom:4px}
+.wbox{background:var(--soft);border:1px dashed var(--accent);border-radius:12px;padding:12px;margin-bottom:6px}
+.wbox .chip{margin:4px 6px 0 0}
+h2{font-size:17px;margin:0 0 8px}
+h1{color:var(--accent)}
+.card{border-top:3px solid var(--accent2)}
+</style>
+<style>
+header,main{max-width:640px}
+main{grid-template-columns:1fr}
+.back{display:inline-block;margin-bottom:8px;color:var(--mute);text-decoration:none;font:14px system-ui,sans-serif}
+.back:hover{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" id="backlink" href="read.html">← Back to messages</a>
+  <h1>Write a message</h1>
+  <p>Anonymous. No name, no account.</p>
+</header>
+<main>
+  <section class="card">
+    <textarea id="txt" maxlength="500" placeholder="Write anything. No name, no account. Just you."></textarea>
+    <div class="note"><span id="cnt">0</span>/500</div>
+    <div class="note" style="margin-top:10px"><b>Content warning (optional).</b> Tick anything that applies. Readers will see a warning first and can choose whether to open your message.</div>
+    <div id="wchips" class="wchips"></div>
+    <label for="dest" class="note">Send it to:</label>
+    <select id="dest"></select>
+    <div id="alert"></div>
+    <button class="go" id="send">Send anonymously</button>
+    <p class="note">Don’t include phone numbers, links, or addresses (they’ll be blocked). Please don’t name classmates, teachers, or staff, and avoid details like your section or schedule that could identify you.</p>
+  </section>
+</main>
+<script>
+const SCH=[
+ {id:"ust",name:"University of Santo Tomas",short:"UST"},
+ {id:"feu",name:"Far Eastern University",short:"FEU"},
+ {id:"nu",name:"National University",short:"NU"},
+ {id:"ceu",name:"Centro Escolar University",short:"CEU"},
+ {id:"adu",name:"Adamson University",short:"AdU"},
+ {id:"sbu",name:"San Beda University",short:"San Beda"},
+ {id:"ue",name:"University of the East",short:"UE"},
+ {id:"mapua",name:"Mapúa University",short:"Mapúa"},
+ {id:"letran",name:"Colegio de San Juan de Letran",short:"Letran"},
+ {id:"arellano",name:"Arellano University",short:"Arellano"},
+ {id:"lyceum",name:"Lyceum of the Philippines University",short:"Lyceum"},
+ {id:"tup",name:"Technological University of the Philippines",short:"TUP"},
+ {id:"pup",name:"Polytechnic University of the Philippines",short:"PUP"}
+];
+const WARN={adult:"18+ / mature",selfharm:"Self-harm or suicide",abuse:"Abuse or violence",grief:"Death or grief",ed:"Eating disorders",substance:"Substance use",other:"Other sensitive topic"};
+const $=id=>document.getElementById(id);
+const api=async(url,opt)=>{
+  const r=await fetch(url,opt);
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(d.error||"Something went wrong");
+  return d;
+};
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+$("dest").innerHTML=`<option value="all">All schools (everyone)</option>`+SCH.map(s=>`<option value="${s.id}">${s.name} (${s.short})</option>`).join("");
+const s0=new URLSearchParams(location.search).get("school");
+if(s0&&SCH.some(s=>s.id===s0))$("dest").value=s0;
+$("wchips").innerHTML=Object.entries(WARN).map(([k,v])=>`<label class="wc"><input type="checkbox" value="${k}"> ${v}</label>`).join("");
+$("backlink").href="read.html?school="+$("dest").value;
+$("dest").onchange=()=>{$("backlink").href="read.html?school="+$("dest").value};
+$("txt").oninput=e=>{$("cnt").textContent=e.target.value.length;$("alert").innerHTML=""};
+
+$("send").onclick=async()=>{
+  const t=$("txt").value.trim();
+  if(t.length<3){$("alert").innerHTML=`<div class="warn">Write a little more first.</div>`;return}
+  const school=$("dest").value;
+  $("send").disabled=true;
+  try{
+    const d=await api("/api/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:t,school,warnings:[...document.querySelectorAll("#wchips input:checked")].map(i=>i.value)})});
+    const next="read.html?school="+school+"&sent=1";
+    if(d.crisis){
+      $("txt").value="";
+      $("alert").innerHTML=`<div class="warn">Your message was sent. It sounds like you’re carrying something heavy. You don’t have to do it alone. In the Philippines, you can call the NCMH Crisis Hotline at <b>1553</b> (toll-free) or <b>0917-899-8727</b>. Your school’s guidance office can also help.</div><a class="go" style="display:block;text-align:center;text-decoration:none;margin-top:8px" href="${next}">View messages</a>`;
+      return;
+    }
+    location.href=next;
+  }catch(e){
+    $("alert").innerHTML=`<div class="warn">${esc(e.message)}</div>`;
+    $("send").disabled=false;
+  }
+};
+</script>
+</body>
+</html>

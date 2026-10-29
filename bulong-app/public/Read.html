@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>try{if(localStorage.getItem("bulong_intro_v1")!=="1")location.replace("index.html")}catch(e){}</script>
+<title>Bulong – anonymous messages for U-Belt and PUP students</title>
+<style>
+:root{--bg:#fbf6ee;--card:#fff;--ink:#2b1216;--mute:#7d6a6c;--line:#ead9cc;--accent:#800000;--accent2:#d99a00;--onaccent:#fff;--btn:linear-gradient(120deg,#800000,#a31621);--soft:#f8eddc;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#190c0f;--card:#291418;--ink:#f7ecec;--mute:#b79ea1;--line:#4a2a2f;--accent:#f2b705;--accent2:#ffd75e;--onaccent:#3a0a10;--btn:linear-gradient(120deg,#f2b705,#ffd75e);--soft:#341a1f}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Times New Roman",serif;line-height:1.5}
+header{padding:20px 20px 4px;max-width:1000px;margin:auto}
+h1{margin:0;font-size:30px;letter-spacing:.5px}
+header p{margin:2px 0 0;color:var(--mute);font-family:system-ui,sans-serif;font-size:14px}
+main{max-width:1000px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;padding:16px 20px 40px;font-family:system-ui,sans-serif}
+@media(max-width:760px){main{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+svg{width:100%;height:auto;max-height:560px;display:block}
+.reg{cursor:pointer}
+.reg circle{fill:var(--dot);transition:.15s}
+.reg:hover circle{fill:var(--accent)}
+.reg.sel circle{fill:var(--dotsel);stroke:var(--ink);stroke-width:1.5}
+.reg text{font-size:11px;fill:var(--ink);pointer-events:none}
+.reg .n{fill:#fff;font-weight:700;font-size:11px;text-anchor:middle}
+.lbl{text-anchor:start}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tabs button,.chip{border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:999px;padding:7px 14px;font:inherit;font-size:14px;cursor:pointer}
+.tabs button.on{background:var(--accent);color:var(--onaccent);border-color:var(--accent)}
+.chip{padding:5px 11px;font-size:13px}
+textarea{width:100%;min-height:130px;resize:vertical;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:12px;font:16px Georgia,serif}
+select{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;margin:8px 0}
+.go{width:100%;padding:12px;border:0;border-radius:12px;background:var(--btn);color:var(--onaccent);font:600 15px system-ui,sans-serif;cursor:pointer}
+.note{font-size:12.5px;color:var(--mute);margin:6px 0}
+.warn{background:var(--soft);border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px;font-size:13.5px;margin:8px 0}
+.msg{border-bottom:1px solid var(--line);padding:12px 2px}
+.msg:last-child{border:0}
+.msg p{margin:0 0 6px;font:16px Georgia,serif;white-space:pre-wrap;word-wrap:break-word}
+.meta{display:flex;gap:10px;align-items:center;font-size:12.5px;color:var(--mute)}
+.meta button{background:none;border:0;color:var(--mute);cursor:pointer;font:inherit;padding:2px 4px}
+.meta button:hover{color:var(--accent)}
+.meta .sp{flex:1}
+.hid{display:none}
+.ropts{display:flex;flex-direction:column;gap:6px;max-height:50vh;overflow-y:auto;margin-top:8px}
+.ro{display:flex;gap:8px;align-items:center;border:1px solid var(--line);background:var(--soft);border-radius:10px;padding:9px 11px;font-size:14px;cursor:pointer}
+.ro:has(input:checked){border-color:var(--accent);outline:1px solid var(--accent)}
+.ro input{accent-color:var(--accent)}
+#rNote{min-height:70px;margin-top:8px;font:14px system-ui,sans-serif}
+.aboutbtn{margin-top:10px;display:inline-block;text-decoration:none}
+.cta{display:inline-block;background:var(--btn);color:var(--onaccent);text-decoration:none;font:700 15px system-ui,sans-serif;padding:11px 20px;border-radius:12px;margin:10px 8px 0 0}
+.fab{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:30;background:var(--btn);color:var(--onaccent);text-decoration:none;font:700 16px system-ui,sans-serif;padding:15px 26px;border-radius:999px;box-shadow:0 10px 24px rgba(128,0,0,.35)}
+@media(max-width:760px){.fab{left:20px;right:20px;text-align:center}}
+body{padding-bottom:90px}
+.go:disabled{opacity:.45;cursor:not-allowed}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font:14px system-ui,sans-serif;max-width:90%;z-index:60}
+.toast.hid{display:none}
+.blurwrap{position:relative;cursor:pointer;border-radius:12px;overflow:hidden;margin-bottom:6px}
+.warnbar{position:relative;z-index:2;display:flex;gap:8px;align-items:center;background:var(--accent);color:var(--onaccent);padding:8px 12px;font-size:13.5px;font-weight:600;border-radius:12px 12px 0 0}
+.blurwrap .blurred{filter:blur(7px);user-select:none;margin:0;padding:10px 12px;background:var(--soft);border-radius:0 0 12px 12px;pointer-events:none}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modal.hid{display:none}
+.mbox{background:var(--card);color:var(--ink);border-radius:16px;padding:20px;max-width:380px;width:100%}
+.mbtn{display:flex;gap:8px;align-items:center;margin-top:12px}
+.mbtn .go{width:auto;padding:10px 16px}
+.search{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;margin-bottom:10px}
+.schools{display:flex;flex-direction:column;gap:6px;max-height:470px;overflow-y:auto;margin-bottom:10px}
+.sc{display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:12px;padding:10px 12px;font:inherit;font-size:14px;cursor:pointer}
+.sc small{opacity:.7;font-size:12px}
+.sc.sel{background:var(--accent);color:var(--onaccent);border-color:var(--accent)}
+.wchips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+.wc{border:1px solid var(--line);background:var(--soft);border-radius:999px;padding:5px 11px;font-size:13px;cursor:pointer;user-select:none}
+.wc:has(input:checked){background:var(--accent);color:var(--onaccent);border-color:var(--accent)}
+.wc input{display:none}
+.tag{display:inline-block;background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:12px;margin:2px 4px 2px 0}
+.tags{margin-bottom:4px}
+.wbox{background:var(--soft);border:1px dashed var(--accent);border-radius:12px;padding:12px;margin-bottom:6px}
+.wbox .chip{margin:4px 6px 0 0}
+h2{font-size:17px;margin:0 0 8px}
+h1{color:var(--accent)}
+.card{border-top:3px solid var(--accent2)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Bulong</h1>
+  <p>Anonymous thoughts and unsaid feelings from university students.</p>
+<a class="cta" data-write href="write.html">Write a message</a>
+  <a class="chip aboutbtn" href="index.html">About &amp; rules</a>
+</header>
+<main>
+  <section class="card">
+    <h2>Pick your school</h2>
+    <input id="q" type="search" class="search" placeholder="Search school…">
+    <div id="schools" class="schools"></div>
+    <button class="chip" id="allbtn">All schools (everyone)</button>
+  </section>
+
+  <section class="card">
+    <h2 id="readTitle"></h2>
+    <label class="note"><input type="checkbox" id="hideW"> Hide messages with content warnings</label>
+    <div id="feed"></div>
+  </section>
+</main>
+
+<a class="fab" data-write href="write.html">Write a message</a>
+
+<div id="modal" class="modal hid" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="mbox">
+    <h2 id="mTitle">⚠ Content warning</h2>
+    <div id="mTags"></div>
+    <p id="mAdult" class="note hid">This message is meant for people 18 and older.</p>
+    <p class="note">This message may be upsetting. Do you want to read it?</p>
+    <div class="mbtn"><button class="go" id="mRead">Read it</button><button class="chip" id="mNo">Don’t read</button></div>
+  </div>
+</div>
+
+<div id="rmodal" class="modal hid" role="dialog" aria-modal="true" aria-labelledby="rTitle">
+  <div class="mbox">
+    <h2 id="rTitle">Report this message</h2>
+    <p class="note">Why are you reporting it? Your report is anonymous.</p>
+    <div id="rOpts" class="ropts"></div>
+    <textarea id="rNote" class="hid" maxlength="200" placeholder="Tell us what’s wrong (max 200 characters)"></textarea>
+    <div class="mbtn"><button class="go" id="rSend" disabled>Send report</button><button class="chip" id="rNo">Cancel</button></div>
+  </div>
+</div>
+<div id="toast" class="toast hid" role="status"></div>
+
+<script>
+const SCH=[
+ {id:"ust",name:"University of Santo Tomas",short:"UST",area:"Sampaloc"},
+ {id:"feu",name:"Far Eastern University",short:"FEU",area:"Sampaloc"},
+ {id:"nu",name:"National University",short:"NU",area:"Sampaloc"},
+ {id:"ceu",name:"Centro Escolar University",short:"CEU",area:"Mendiola"},
+ {id:"adu",name:"Adamson University",short:"AdU",area:"Ermita"},
+ {id:"sbu",name:"San Beda University",short:"San Beda",area:"Mendiola"},
+ {id:"ue",name:"University of the East",short:"UE",area:"Recto"},
+ {id:"mapua",name:"Mapúa University",short:"Mapúa",area:"Intramuros"},
+ {id:"letran",name:"Colegio de San Juan de Letran",short:"Letran",area:"Intramuros"},
+ {id:"arellano",name:"Arellano University",short:"Arellano",area:"Legarda"},
+ {id:"lyceum",name:"Lyceum of the Philippines University",short:"Lyceum",area:"Intramuros"},
+ {id:"tup",name:"Technological University of the Philippines",short:"TUP",area:"Ermita"},
+ {id:"pup",name:"Polytechnic University of the Philippines",short:"PUP",area:"Sta. Mesa"}
+];
+const WARN={adult:"18+ / mature",selfharm:"Self-harm or suicide",abuse:"Abuse or violence",grief:"Death or grief",ed:"Eating disorders",substance:"Substance use",other:"Other sensitive topic"};
+const REASONS=[["naming","Names or identifies a real person"],["bullying","Bullying or harassment"],["hate","Hate speech or discrimination"],["sexual","Sexual or explicit content"],["threat","Threats or violence"],["spam","Spam, ads, or links"],["nowarn","Needs a content warning"],["danger","Someone may be in danger or hurting themselves"],["other","Something else"]];
+let msgs=[],counts={},sel="all",hugged=new Set(),reported=new Set(),revealed={};
+const $=id=>document.getElementById(id);
+const api=async(url,opt)=>{
+  const r=await fetch(url,opt);
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(d.error||"Something went wrong");
+  return d;
+};
+function ago(iso){
+  const s=(Date.now()-new Date(iso))/1000;
+  if(s<60)return "just now";
+  if(s<3600)return Math.floor(s/60)+"m ago";
+  if(s<86400)return Math.floor(s/3600)+"h ago";
+  return Math.floor(s/86400)+"d ago";
+}
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+const nameOf=id=>id==="all"?"All schools":(SCH.find(s=>s.id===id)||{name:""}).name;
+const qp=new URLSearchParams(location.search);
+const s0=qp.get("school");
+if(s0&&(s0==="all"||SCH.some(s=>s.id===s0)))sel=s0;
+
+async function load(){
+  try{
+    const [c,m]=await Promise.all([api("/api/counts"),api("/api/messages?school="+sel)]);
+    counts=c; msgs=m;
+  }catch(e){msgs=[]}
+  render();
+}
+function drawSchools(){
+  const q=$("q").value.trim().toLowerCase();
+  const list=SCH.filter(s=>(s.name+" "+s.short).toLowerCase().includes(q));
+  $("schools").innerHTML=list.map(s=>`<button class="sc ${sel===s.id?'sel':''}" data-id="${s.id}"><span>${s.short}<br><small>${s.name} · ${s.area}</small></span><b>${counts[s.id]||0}</b></button>`).join("")||`<p class="note">No school found.</p>`;
+  $("schools").querySelectorAll(".sc").forEach(b=>b.onclick=()=>pick(b.dataset.id));
+  $("allbtn").textContent=`All schools (everyone) · ${counts.all||0}`;
+}
+function pick(id){sel=id;load()}
+function fake(id,n){const w=["lorem","ipsum","dolor","amet","sit","nulla","magna","vitae","elit","sed"];let s="",i=id;while(s.length<n){s+=w[i%w.length]+" ";i=(i*31+7)%1000}return s.slice(0,Math.min(n,300))}
+function card(m){
+  const flagged=m.warnings.length>0, open=!flagged||revealed[m.id]!==undefined;
+  const tags=m.warnings.map(w=>`<span class="tag">${WARN[w]}</span>`).join("");
+  const label=m.warnings.map(w=>WARN[w]).join(" · ");
+  const body=open
+    ? `${flagged?`<div class="tags">${tags}</div>`:""}<p>${esc(flagged?revealed[m.id]:m.text)}</p>`
+    : `<div class="blurwrap" data-open="${m.id}" role="button" tabindex="0"><div class="warnbar"><span>⚠ Content warning: ${label}</span><span style="margin-left:auto;font-weight:400">Tap to view</span></div><p class="blurred" aria-hidden="true">${fake(m.id,m.len||80)}</p></div>`;
+  return `<div class="msg">${body}
+    <div class="meta"><span>${ago(m.at)}</span><span class="sp"></span>
+    ${open&&flagged?`<button data-hide="${m.id}">Blur again</button>`:""}
+    <button data-hug="${m.id}">🤍 ${m.hugs}${hugged.has(m.id)?' · sent':''}</button>
+    <button data-rep="${m.id}">Report</button></div></div>`;
+}
+function render(){
+  drawSchools();
+  $("readTitle").textContent=sel==="all"?"All schools · sent to everyone":nameOf(sel);
+  document.querySelectorAll("[data-write]").forEach(a=>a.href="write.html?school="+sel);
+  const hideW=$("hideW").checked;
+  const list=msgs.filter(m=>!reported.has(m.id)&&!(hideW&&m.warnings.length));
+  $("feed").innerHTML=list.length?list.map(card).join(""):
+    `<p class="note">Nothing to show here yet. Be the first to write something for ${nameOf(sel)}.</p>`;
+  $("feed").querySelectorAll("[data-open]").forEach(b=>{b.onclick=()=>openWarn(+b.dataset.open);b.onkeydown=e=>{if(e.key==="Enter")openWarn(+b.dataset.open)};});
+  $("feed").querySelectorAll("[data-hide]").forEach(b=>b.onclick=()=>{delete revealed[+b.dataset.hide];render();});
+  $("feed").querySelectorAll("[data-hug]").forEach(b=>b.onclick=async()=>{
+    const id=+b.dataset.hug; if(hugged.has(id))return; hugged.add(id);
+    try{await api(`/api/messages/${id}/hug`,{method:"POST"})}catch(e){}
+    load();
+  });
+  $("feed").querySelectorAll("[data-rep]").forEach(b=>b.onclick=()=>openReport(+b.dataset.rep));
+}
+
+/* ---- content warning popup ---- */
+let pendingId=null;
+function openWarn(id){
+  const m=msgs.find(x=>x.id===id); if(!m)return;
+  pendingId=id;
+  const adult=m.warnings.includes("adult");
+  $("mTags").innerHTML=m.warnings.map(w=>`<span class="tag">${WARN[w]}</span>`).join("");
+  $("mAdult").classList.toggle("hid",!adult);
+  $("mRead").textContent=adult?"I’m 18+, read it":"Read it";
+  $("modal").classList.remove("hid");
+  $("mRead").focus();
+}
+function closeWarn(){$("modal").classList.add("hid");pendingId=null}
+$("mNo").onclick=closeWarn;
+$("modal").onclick=e=>{if(e.target.id==="modal")closeWarn()};
+$("mRead").onclick=async()=>{
+  const id=pendingId; closeWarn(); if(id==null)return;
+  try{const d=await api("/api/messages/"+id);revealed[id]=d.text}catch(e){}
+  render();
+};
+
+/* ---- report popup ---- */
+let reportId=null,reportReason=null;
+function openReport(id){
+  reportId=id;reportReason=null;$("rNote").value="";updReport();
+  $("rOpts").innerHTML=REASONS.map(([k,v])=>`<label class="ro"><input type="radio" name="rr" value="${k}"> ${v}</label>`).join("");
+  $("rOpts").querySelectorAll("input").forEach(i=>i.onchange=()=>{reportReason=i.value;updReport();if(i.value==="other")$("rNote").focus()});
+  $("rmodal").classList.remove("hid");
+}
+function updReport(){
+  const other=reportReason==="other";
+  $("rNote").classList.toggle("hid",!other);
+  $("rSend").disabled=!reportReason||(other&&$("rNote").value.trim().length<3);
+}
+$("rNote").oninput=updReport;
+function closeReport(){$("rmodal").classList.add("hid");reportId=null}
+function toast(t,ms){const el=$("toast");el.textContent=t;el.classList.remove("hid");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.add("hid"),ms||3500)}
+$("rNo").onclick=closeReport;
+$("rmodal").onclick=e=>{if(e.target.id==="rmodal")closeReport()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeWarn();closeReport()}});
+$("rSend").onclick=async()=>{
+  const id=reportId,reason=reportReason,note=reason==="other"?$("rNote").value.trim():""; if(id==null||!reason)return; closeReport();
+  try{await api(`/api/messages/${id}/report`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({reason,note})})}catch(e){}
+  if(reason==="danger"){toast("Thank you for looking out for them. If someone is in immediate danger, call 911. NCMH crisis hotline: 1553.",9000)}
+  else if(reason==="nowarn"){toast("Thanks. A warning will be added if others agree.")}
+  else{reported.add(id);toast("Thanks. This message is hidden for you and sent for review.")}
+  render();
+};
+
+$("hideW").onchange=render;
+$("q").oninput=drawSchools;
+$("allbtn").onclick=()=>pick("all");
+if(qp.get("sent")==="1"){
+  toast("Your message was sent.");
+  history.replaceState(null,"","read.html?school="+sel);
+}
+load();
+</script>
+</body>
+</html>
