@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script>try{if(localStorage.getItem("bulong_intro_v1")!=="1")location.replace("index.html")}catch(e){}</script>
-<title>Write a message – Bulong</title>
+<title>Bulong – anonymous messages for U-Belt and PUP students</title>
 <style>
 :root{--bg:#fbf6ee;--card:#fff;--ink:#2b1216;--mute:#7d6a6c;--line:#ead9cc;--accent:#800000;--accent2:#d99a00;--onaccent:#fff;--btn:linear-gradient(120deg,#800000,#a31621);--soft:#f8eddc;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#190c0f;--card:#291418;--ink:#f7ecec;--mute:#b79ea1;--line:#4a2a2f;--accent:#f2b705;--accent2:#ffd75e;--onaccent:#3a0a10;--btn:linear-gradient(120deg,#f2b705,#ffd75e);--soft:#341a1f}}
@@ -48,6 +48,10 @@ select{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);b
 .ro input{accent-color:var(--accent)}
 #rNote{min-height:70px;margin-top:8px;font:14px system-ui,sans-serif}
 .aboutbtn{margin-top:10px;display:inline-block;text-decoration:none}
+.cta{display:inline-block;background:var(--btn);color:var(--onaccent);text-decoration:none;font:700 15px system-ui,sans-serif;padding:11px 20px;border-radius:12px;margin:10px 8px 0 0}
+.fab{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:30;background:var(--btn);color:var(--onaccent);text-decoration:none;font:700 16px system-ui,sans-serif;padding:15px 26px;border-radius:999px;box-shadow:0 10px 24px rgba(128,0,0,.35)}
+@media(max-width:760px){.fab{left:auto;right:16px;padding:13px 20px;font-size:15px}}
+body{padding-bottom:90px}
 .go:disabled{opacity:.45;cursor:not-allowed}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font:14px system-ui,sans-serif;max-width:90%;z-index:60}
 .toast.hid{display:none}
@@ -76,51 +80,87 @@ h2{font-size:17px;margin:0 0 8px}
 h1{color:var(--accent)}
 .card{border-top:3px solid var(--accent2)}
 .mbox{max-height:90vh;overflow-y:auto}
-@media(max-width:760px){header{padding:16px 16px 0}h1{font-size:26px}main{padding:12px 12px 24px}.card{padding:12px;border-radius:14px}}
-</style>
-<style>
-header,main{max-width:640px}
-main{grid-template-columns:1fr}
-.back{display:inline-block;margin-bottom:8px;color:var(--mute);text-decoration:none;font:14px system-ui,sans-serif}
-.back:hover{color:var(--accent)}
+@media(max-width:760px){
+ header{padding:16px 16px 0}
+ h1{font-size:26px}
+ main{padding:12px 12px 24px;gap:12px}
+ .card{padding:12px;border-radius:14px}
+ .pick{display:flex;flex-direction:column}
+ .pick h2{order:0;margin-bottom:6px}
+ .pick #allbtn{order:1;margin-bottom:8px;align-self:flex-start}
+ .pick .schools{order:2;flex-direction:row;overflow-x:auto;max-height:none;margin-bottom:0;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+ .pick .search{display:none}
+ .pick .sc{flex:0 0 auto;white-space:nowrap;padding:8px 14px;border-radius:999px}
+ .pick .sc small,.pick .sc br{display:none}
+ .pick .sc b{margin-left:6px}
+ .meta button{padding:8px 10px;font-size:14px}
+}
 </style>
 </head>
 <body>
 <header>
-  <a class="back" id="backlink" href="read.html">← Back to messages</a>
-  <h1>Write a message</h1>
-  <p>Anonymous. No name, no account.</p>
+  <h1>Bulong</h1>
+  <p>Anonymous thoughts and unsaid feelings from university students.</p>
+<a class="cta" data-write href="write.html">Write a message</a>
+  <a class="chip aboutbtn" href="index.html">About &amp; rules</a>
 </header>
 <main>
+  <section class="card pick">
+    <h2>Pick your school</h2>
+    <input id="q" type="search" class="search" placeholder="Search school…">
+    <div id="schools" class="schools"></div>
+    <button class="chip" id="allbtn">All schools (everyone)</button>
+  </section>
+
   <section class="card">
-    <textarea id="txt" maxlength="500" placeholder="Write anything. No name, no account. Just you."></textarea>
-    <div class="note"><span id="cnt">0</span>/500</div>
-    <div class="note" style="margin-top:10px"><b>Content warning (optional).</b> Tick anything that applies. Readers will see a warning first and can choose whether to open your message.</div>
-    <div id="wchips" class="wchips"></div>
-    <label for="dest" class="note">Send it to:</label>
-    <select id="dest"></select>
-    <div id="alert"></div>
-    <button class="go" id="send">Send anonymously</button>
-    <p class="note">Don’t include phone numbers, links, or addresses (they’ll be blocked). Please don’t name classmates, teachers, or staff, and avoid details like your section or schedule that could identify you.</p>
+    <h2 id="readTitle"></h2>
+    <label class="note"><input type="checkbox" id="hideW"> Hide messages with content warnings</label>
+    <div id="feed"></div>
   </section>
 </main>
+
+<a class="fab" data-write href="write.html">Write a message</a>
+
+<div id="modal" class="modal hid" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="mbox">
+    <h2 id="mTitle">⚠ Content warning</h2>
+    <div id="mTags"></div>
+    <p id="mAdult" class="note hid">This message is meant for people 18 and older.</p>
+    <p class="note">This message may be upsetting. Do you want to read it?</p>
+    <div class="mbtn"><button class="go" id="mRead">Read it</button><button class="chip" id="mNo">Don’t read</button></div>
+  </div>
+</div>
+
+<div id="rmodal" class="modal hid" role="dialog" aria-modal="true" aria-labelledby="rTitle">
+  <div class="mbox">
+    <h2 id="rTitle">Report this message</h2>
+    <p class="note">Why are you reporting it? Your report is anonymous.</p>
+    <div id="rOpts" class="ropts"></div>
+    <textarea id="rNote" class="hid" maxlength="200" placeholder="Tell us what’s wrong (max 200 characters)"></textarea>
+    <div class="mbtn"><button class="go" id="rSend" disabled>Send report</button><button class="chip" id="rNo">Cancel</button></div>
+  </div>
+</div>
+<div id="toast" class="toast hid" role="status"></div>
+
 <script>
 const SCH=[
- {id:"ust",name:"University of Santo Tomas",short:"UST"},
- {id:"feu",name:"Far Eastern University",short:"FEU"},
- {id:"nu",name:"National University",short:"NU"},
- {id:"ceu",name:"Centro Escolar University",short:"CEU"},
- {id:"adu",name:"Adamson University",short:"AdU"},
- {id:"sbu",name:"San Beda University",short:"San Beda"},
- {id:"ue",name:"University of the East",short:"UE"},
- {id:"mapua",name:"Mapúa University",short:"Mapúa"},
- {id:"letran",name:"Colegio de San Juan de Letran",short:"Letran"},
- {id:"arellano",name:"Arellano University",short:"Arellano"},
- {id:"lyceum",name:"Lyceum of the Philippines University",short:"Lyceum"},
- {id:"tup",name:"Technological University of the Philippines",short:"TUP"},
- {id:"pup",name:"Polytechnic University of the Philippines",short:"PUP"}
+ {id:"ust",name:"University of Santo Tomas",short:"UST",area:"Sampaloc"},
+ {id:"feu",name:"Far Eastern University",short:"FEU",area:"Sampaloc"},
+ {id:"nu",name:"National University",short:"NU",area:"Sampaloc"},
+ {id:"ceu",name:"Centro Escolar University",short:"CEU",area:"Mendiola"},
+ {id:"adu",name:"Adamson University",short:"AdU",area:"Ermita"},
+ {id:"sbu",name:"San Beda University",short:"San Beda",area:"Mendiola"},
+ {id:"ue",name:"University of the East",short:"UE",area:"Recto"},
+ {id:"mapua",name:"Mapúa University",short:"Mapúa",area:"Intramuros"},
+ {id:"letran",name:"Colegio de San Juan de Letran",short:"Letran",area:"Intramuros"},
+ {id:"arellano",name:"Arellano University",short:"Arellano",area:"Legarda"},
+ {id:"lyceum",name:"Lyceum of the Philippines University",short:"Lyceum",area:"Intramuros"},
+ {id:"tup",name:"Technological University of the Philippines",short:"TUP",area:"Ermita"},
+ {id:"pup",name:"Polytechnic University of the Philippines",short:"PUP",area:"Sta. Mesa"}
 ];
 const WARN={adult:"18+ / mature",selfharm:"Self-harm or suicide",abuse:"Abuse or violence",grief:"Death or grief",ed:"Eating disorders",substance:"Substance use",other:"Other sensitive topic"};
+const REASONS=[["naming","Names or identifies a real person"],["bullying","Bullying or harassment"],["hate","Hate speech or discrimination"],["sexual","Sexual or explicit content"],["threat","Threats or violence"],["spam","Spam, ads, or links"],["nowarn","Needs a content warning"],["danger","Someone may be in danger or hurting themselves"],["other","Something else"]];
+let msgs=[],counts={},sel="all",hugged=new Set(),reported=new Set(),revealed={};
 const $=id=>document.getElementById(id);
 const api=async(url,opt)=>{
   const r=await fetch(url,opt);
@@ -128,35 +168,126 @@ const api=async(url,opt)=>{
   if(!r.ok)throw new Error(d.error||"Something went wrong");
   return d;
 };
+function ago(iso){
+  const s=(Date.now()-new Date(iso))/1000;
+  if(s<60)return "just now";
+  if(s<3600)return Math.floor(s/60)+"m ago";
+  if(s<86400)return Math.floor(s/3600)+"h ago";
+  return Math.floor(s/86400)+"d ago";
+}
 function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+const nameOf=id=>id==="all"?"All schools":(SCH.find(s=>s.id===id)||{name:""}).name;
+const qp=new URLSearchParams(location.search);
+const s0=qp.get("school");
+if(s0&&(s0==="all"||SCH.some(s=>s.id===s0)))sel=s0;
 
-$("dest").innerHTML=`<option value="all">All schools (everyone)</option>`+SCH.map(s=>`<option value="${s.id}">${s.name} (${s.short})</option>`).join("");
-const s0=new URLSearchParams(location.search).get("school");
-if(s0&&SCH.some(s=>s.id===s0))$("dest").value=s0;
-$("wchips").innerHTML=Object.entries(WARN).map(([k,v])=>`<label class="wc"><input type="checkbox" value="${k}"> ${v}</label>`).join("");
-$("backlink").href="read.html?school="+$("dest").value;
-$("dest").onchange=()=>{$("backlink").href="read.html?school="+$("dest").value};
-$("txt").oninput=e=>{$("cnt").textContent=e.target.value.length;$("alert").innerHTML=""};
-
-$("send").onclick=async()=>{
-  const t=$("txt").value.trim();
-  if(t.length<3){$("alert").innerHTML=`<div class="warn">Write a little more first.</div>`;return}
-  const school=$("dest").value;
-  $("send").disabled=true;
+async function load(){
   try{
-    const d=await api("/api/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:t,school,warnings:[...document.querySelectorAll("#wchips input:checked")].map(i=>i.value)})});
-    const next="read.html?school="+school+"&sent=1";
-    if(d.crisis){
-      $("txt").value="";
-      $("alert").innerHTML=`<div class="warn">Your message was sent. It sounds like you’re carrying something heavy. You don’t have to do it alone. In the Philippines, you can call the NCMH Crisis Hotline at <b>1553</b> (toll-free) or <b>0917-899-8727</b>. Your school’s guidance office can also help.</div><a class="go" style="display:block;text-align:center;text-decoration:none;margin-top:8px" href="${next}">View messages</a>`;
-      return;
-    }
-    location.href=next;
-  }catch(e){
-    $("alert").innerHTML=`<div class="warn">${esc(e.message)}</div>`;
-    $("send").disabled=false;
-  }
+    const [c,m]=await Promise.all([api("/api/counts"),api("/api/messages?school="+sel)]);
+    counts=c; msgs=m;
+  }catch(e){msgs=[]}
+  render();
+}
+function drawSchools(){
+  const q=$("q").value.trim().toLowerCase();
+  const list=SCH.filter(s=>(s.name+" "+s.short).toLowerCase().includes(q));
+  $("schools").innerHTML=list.map(s=>`<button class="sc ${sel===s.id?'sel':''}" data-id="${s.id}"><span>${s.short}<br><small>${s.name} · ${s.area}</small></span><b>${counts[s.id]||0}</b></button>`).join("")||`<p class="note">No school found.</p>`;
+  $("schools").querySelectorAll(".sc").forEach(b=>b.onclick=()=>pick(b.dataset.id));
+  $("allbtn").textContent=`All schools (everyone) · ${counts.all||0}`;
+}
+function pick(id){sel=id;load()}
+function fake(id,n){const w=["lorem","ipsum","dolor","amet","sit","nulla","magna","vitae","elit","sed"];let s="",i=id;while(s.length<n){s+=w[i%w.length]+" ";i=(i*31+7)%1000}return s.slice(0,Math.min(n,300))}
+function card(m){
+  const flagged=m.warnings.length>0, open=!flagged||revealed[m.id]!==undefined;
+  const tags=m.warnings.map(w=>`<span class="tag">${WARN[w]}</span>`).join("");
+  const label=m.warnings.map(w=>WARN[w]).join(" · ");
+  const body=open
+    ? `${flagged?`<div class="tags">${tags}</div>`:""}<p>${esc(flagged?revealed[m.id]:m.text)}</p>`
+    : `<div class="blurwrap" data-open="${m.id}" role="button" tabindex="0"><div class="warnbar"><span>⚠ Content warning: ${label}</span><span style="margin-left:auto;font-weight:400">Tap to view</span></div><p class="blurred" aria-hidden="true">${fake(m.id,m.len||80)}</p></div>`;
+  return `<div class="msg">${body}
+    <div class="meta"><span>${ago(m.at)}</span><span class="sp"></span>
+    ${open&&flagged?`<button data-hide="${m.id}">Blur again</button>`:""}
+    <button data-hug="${m.id}">🤍 ${m.hugs}${hugged.has(m.id)?' · sent':''}</button>
+    <button data-rep="${m.id}">Report</button></div></div>`;
+}
+function render(){
+  drawSchools();
+  $("readTitle").textContent=sel==="all"?"All schools · sent to everyone":nameOf(sel);
+  document.querySelectorAll("[data-write]").forEach(a=>a.href="write.html?school="+sel);
+  const hideW=$("hideW").checked;
+  const list=msgs.filter(m=>!reported.has(m.id)&&!(hideW&&m.warnings.length));
+  $("feed").innerHTML=list.length?list.map(card).join(""):
+    `<p class="note">Nothing to show here yet. Be the first to write something for ${nameOf(sel)}.</p>`;
+  $("feed").querySelectorAll("[data-open]").forEach(b=>{b.onclick=()=>openWarn(+b.dataset.open);b.onkeydown=e=>{if(e.key==="Enter")openWarn(+b.dataset.open)};});
+  $("feed").querySelectorAll("[data-hide]").forEach(b=>b.onclick=()=>{delete revealed[+b.dataset.hide];render();});
+  $("feed").querySelectorAll("[data-hug]").forEach(b=>b.onclick=async()=>{
+    const id=+b.dataset.hug; if(hugged.has(id))return; hugged.add(id);
+    try{await api(`/api/messages/${id}/hug`,{method:"POST"})}catch(e){}
+    load();
+  });
+  $("feed").querySelectorAll("[data-rep]").forEach(b=>b.onclick=()=>openReport(+b.dataset.rep));
+}
+
+/* ---- content warning popup ---- */
+let pendingId=null;
+function openWarn(id){
+  const m=msgs.find(x=>x.id===id); if(!m)return;
+  pendingId=id;
+  const adult=m.warnings.includes("adult");
+  $("mTags").innerHTML=m.warnings.map(w=>`<span class="tag">${WARN[w]}</span>`).join("");
+  $("mAdult").classList.toggle("hid",!adult);
+  $("mRead").textContent=adult?"I’m 18+, read it":"Read it";
+  $("modal").classList.remove("hid");
+  $("mRead").focus();
+}
+function closeWarn(){$("modal").classList.add("hid");pendingId=null}
+$("mNo").onclick=closeWarn;
+$("modal").onclick=e=>{if(e.target.id==="modal")closeWarn()};
+$("mRead").onclick=async()=>{
+  const id=pendingId; closeWarn(); if(id==null)return;
+  try{const d=await api("/api/messages/"+id);revealed[id]=d.text}catch(e){}
+  render();
 };
+
+/* ---- report popup ---- */
+let reportId=null,reportReason=null;
+function openReport(id){
+  reportId=id;reportReason=null;$("rNote").value="";updReport();
+  $("rOpts").innerHTML=REASONS.map(([k,v])=>`<label class="ro"><input type="radio" name="rr" value="${k}"> ${v}</label>`).join("");
+  $("rOpts").querySelectorAll("input").forEach(i=>i.onchange=()=>{reportReason=i.value;updReport();if(i.value==="other")$("rNote").focus()});
+  $("rmodal").classList.remove("hid");
+}
+function updReport(){
+  const other=reportReason==="other";
+  $("rNote").classList.toggle("hid",!other);
+  $("rSend").disabled=!reportReason||(other&&$("rNote").value.trim().length<3);
+}
+$("rNote").oninput=updReport;
+function closeReport(){$("rmodal").classList.add("hid");reportId=null}
+function toast(t,ms){const el=$("toast");el.textContent=t;el.classList.remove("hid");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.add("hid"),ms||3500)}
+$("rNo").onclick=closeReport;
+$("rmodal").onclick=e=>{if(e.target.id==="rmodal")closeReport()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeWarn();closeReport()}});
+$("rSend").onclick=async()=>{
+  const id=reportId,reason=reportReason,note=reason==="other"?$("rNote").value.trim():""; if(id==null||!reason)return; closeReport();
+  try{await api(`/api/messages/${id}/report`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({reason,note})})}catch(e){}
+  if(reason==="danger"){toast("Thank you for looking out for them. If someone is in immediate danger, call 911. NCMH crisis hotline: 1553.",9000)}
+  else if(reason==="nowarn"){toast("Thanks. A warning will be added if others agree.")}
+  else{reported.add(id);toast("Thanks. This message is hidden for you and sent for review.")}
+  render();
+};
+
+$("hideW").onchange=render;
+$("q").oninput=drawSchools;
+$("allbtn").onclick=()=>pick("all");
+if(qp.get("sent")==="1"){
+  toast("Your message was sent.");
+  history.replaceState(null,"","read.html?school="+sel);
+}
+/* ignore accidental taps right after the page opens (e.g. a second tap on "Enter Bulong") */
+const openedAt=Date.now();
+document.querySelectorAll("[data-write]").forEach(a=>a.addEventListener("click",e=>{if(Date.now()-openedAt<1200)e.preventDefault()}));
+load();
 </script>
 </body>
 </html>
